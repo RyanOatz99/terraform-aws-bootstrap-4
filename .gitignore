@@ -1,0 +1,4 @@
+example/*
+!example/bootstrap.tf
+**/*.tfstate*
+.terraform/
