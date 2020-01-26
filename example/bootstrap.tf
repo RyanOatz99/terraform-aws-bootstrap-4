@@ -1,86 +1,85 @@
 locals {
-  org = "acme"
+  org    = "acme"
   domain = "acme.com"
   standard_sections = {
     foundation = {
       remote_states = []
-      crosslinked = true
-      imports = {}
+      crosslinked   = true
     }
     environment = {
       remote_states = [
         "foundation"
       ]
       crosslinked = false
-      imports = {}
     }
   }
 }
 
 module "root" {
-  source      = "../"
-  region      = "us-east-1"
-  name        = local.org
-  email       = "aws@${local.domain}"
-  domain      = local.domain
+  source         = "../"
+  root_account   = true
+  region         = "us-east-1"
+  name           = local.org
+  email          = "aws@${local.domain}"
+  domain         = local.domain
 }
 
 module "shared" {
-  source      = "../"
-  parent      = module.root
-  name        = "shared"
-  email       = "aws+shared@${local.domain}"
-  region      = "us-east-1"
+  source         = "../"
+  root_account   = module.root
+  name           = "shared"
+  email          = "aws+shared@${local.domain}"
+  region         = "us-east-1"
 }
 
 module "security" {
-  source      = "../"
-  parent      = module.root
-  name        = "security"
-  email       = "aws+security@${local.domain}"
-  region      = "us-east-1"
+  source         = "../"
+  root_account   = module.root
+  name           = "security"
+  email          = "aws+security@${local.domain}"
+  region         = "us-east-1"
 }
 
 // these will all become one module with a for_each when this lands:
 // https://github.com/hashicorp/terraform/issues/10462
 module "demo-sandbox" {
-  source      = "../"
-  parent      = module.root
-  name        = "demo"
-  environment = "sandbox"
-  email       = "aws+demo-sandbox@${local.domain}"
-  region      = "us-east-1"
-  sections    = local.standard_sections
+  source         = "../"
+  root_account   = module.root
+  name           = "demo"
+  environment    = "sandbox"
+  email          = "aws+demo-sandbox@${local.domain}"
+  region         = "us-east-1"
+  sections       = local.standard_sections
 }
 
 module "demo-dev" {
-  source      = "../"
-  parent      = module.root
-  name        = "demo"
-  environment = "dev"
-  email       = "aws+demo-dev@${local.domain}"
-  region      = "us-east-1"
-  sections    = local.standard_sections
+  source         = "../"
+  root_account   = module.root
+  name           = "demo"
+  environment    = "dev"
+  email          = "aws+demo-dev@${local.domain}"
+  region         = "us-east-1"
+  sections       = local.standard_sections
 }
 
 module "demo-preprod" {
-  source      = "../"
-  parent      = module.root
-  name        = "demo"
-  environment = "preprod"
-  email       = "aws+demo-preprod@${local.domain}"
-  region      = "us-east-1"
-  sections    = local.standard_sections
+  source         = "../"
+  root_account   = module.root
+  name           = "demo"
+  environment    = "preprod"
+  email          = "aws+demo-preprod@${local.domain}"
+  region         = "us-east-1"
+  sections       = local.standard_sections
 }
 
 module "demo-prod" {
-  source      = "../"
-  parent      = module.root
-  name        = "demo"
-  environment = "prod"
-  email       = "aws+demo-prod@${local.domain}"
-  region      = "us-east-1"
-  sections    = local.standard_sections
+  source         = "../"
+  root_account   = module.root
+  name           = "demo"
+  environment    = "prod"
+  email          = "aws+demo-prod@${local.domain}"
+  region         = "us-east-1"
+  sections       = local.standard_sections
 }
 
 output "instructions" {

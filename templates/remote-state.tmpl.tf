@@ -1,3 +1,4 @@
+# Get data from another terraform project by reading it's tfstate file.
 data "terraform_remote_state" "${key}" {
   backend = "s3"
   config = {
@@ -8,6 +9,7 @@ data "terraform_remote_state" "${key}" {
   }
 }
 
+# Make data from other project accessible under a shorter name.
 locals {
   ${key} = data.terraform_remote_state.${key}.outputs
 }
