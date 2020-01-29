@@ -4,7 +4,7 @@ data "terraform_remote_state" "${key}" {
   config = {
     profile = "${profile}"
     region  = "${region}"
-    bucket  = "${bucket}-tfstate"
+    bucket  = "${bucket}-${region}-tfstate"
     key     = "${statefile}.tfstate"
   }
 }

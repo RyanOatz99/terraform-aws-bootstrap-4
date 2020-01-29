@@ -3,7 +3,7 @@ terraform {
   backend "s3" {
     profile = "${profile}"
     region  = "${region}"
-    bucket  = "${bucket}-tfstate"
+    bucket  = "${bucket}-${region}-tfstate"
     key     = "${statefile}.tfstate"
   }
 }

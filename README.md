@@ -5,6 +5,8 @@
 
 * You want to manage infrastructure for a large organization in AWS.
 * You want to segregate workloads with sub-accounts for security & billing.
+* You want to log API calls from all sub-accounts to a bucket in the master
+  account.
 * You want to administer sub-accounts through role switching.
 * You want a clean pattern for linking resources between sub-accounts, e.g.
   * ECR container registry sharing

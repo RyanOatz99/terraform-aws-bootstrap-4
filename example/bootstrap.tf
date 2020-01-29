@@ -42,42 +42,42 @@ module "security" {
 
 // these will all become one module with a for_each when this lands:
 // https://github.com/hashicorp/terraform/issues/10462
-module "demo-sandbox" {
+module "project-sandbox" {
   source         = "../"
   root_account   = module.root
-  name           = "demo"
+  name           = "project"
   environment    = "sandbox"
-  email          = "aws+demo-sandbox@${local.domain}"
+  email          = "aws+project-sandbox@${local.domain}"
   region         = "us-east-1"
   sections       = local.standard_sections
 }
 
-module "demo-dev" {
+module "project-dev" {
   source         = "../"
   root_account   = module.root
-  name           = "demo"
+  name           = "project"
   environment    = "dev"
-  email          = "aws+demo-dev@${local.domain}"
+  email          = "aws+project-dev@${local.domain}"
   region         = "us-east-1"
   sections       = local.standard_sections
 }
 
-module "demo-preprod" {
+module "project-preprod" {
   source         = "../"
   root_account   = module.root
-  name           = "demo"
+  name           = "project"
   environment    = "preprod"
-  email          = "aws+demo-preprod@${local.domain}"
+  email          = "aws+project-preprod@${local.domain}"
   region         = "us-east-1"
   sections       = local.standard_sections
 }
 
-module "demo-prod" {
+module "project-prod" {
   source         = "../"
   root_account   = module.root
-  name           = "demo"
+  name           = "project"
   environment    = "prod"
-  email          = "aws+demo-prod@${local.domain}"
+  email          = "aws+project-prod@${local.domain}"
   region         = "us-east-1"
   sections       = local.standard_sections
 }
@@ -85,11 +85,15 @@ module "demo-prod" {
 output "instructions" {
   value = <<-EOF
 
-    1. Configure an awscli profile named `${local.org}` that has administrative
-       access to your root/master AWS account.
-    2. Ensure a private s3 bucket named `${local.org}-tfstate` exists in the
-       root/master account. You can run the following to create it:
-       aws s3api create-bucket --acl private --bucket ${local.org}-tfstate --profile ${local.org}
+    1. Run `aws-vault add ${local.org}` and enter the creds for the root/master
+       AWS account. Then, run the following:
+       cat <<EOF >> ~/.aws/config
+    [profile ${local.org}]
+    credential_process=aws-vault exec ${local.org} --json
+    region = ${module.root.region}
+    EOF
+    2. Ensure a private s3 bucket exists in the root/master account:
+       aws s3api create-bucket --acl private --bucket ${module.root.name}-${module.root.region}-tfstate --profile ${local.org}
     3. Ensure the bucket is locked down by running the following:
        (cd ${local.org} && terraform init && terraform apply)
     4. Run the following to create all subaccounts:

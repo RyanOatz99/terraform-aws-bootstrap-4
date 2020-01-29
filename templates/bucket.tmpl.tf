@@ -1,7 +1,7 @@
 # Bucket to store all tfstate files for this account.
 resource "aws_s3_bucket" "terraform_state" {
   provider = aws.${name}
-  bucket   = "${name}-tfstate"
+  bucket   = "${name}-${region}-tfstate"
   acl      = "private"
   versioning {
     enabled = true

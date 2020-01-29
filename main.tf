@@ -106,7 +106,8 @@ resource "local_file" "bootstrap" {
     })}
 
     ${templatefile("${path.module}/templates/bucket.tmpl.tf", {
-      name = local.name
+      name   = local.name
+      region = var.region
     })}
 
     ${templatefile("${path.module}/templates/backend.tmpl.tf", {
@@ -121,6 +122,20 @@ resource "local_file" "bootstrap" {
       provider = local.name
       domain   = local.domain
     })}
+
+    ${templatefile("${path.module}/templates/cloudtrail.tmpl.tf", {
+      provider = local.name
+      bucket   = "${local.name}-security-cloudtrail"
+      DOLLAR   = "$"
+    })}
+
+    # Ensure root/master account can create subaccounts
+    resource "aws_organizations_organization" "main" {
+      provider = aws.${local.name}
+      aws_service_access_principals = [
+        "cloudtrail.amazonaws.com"
+      ]
+    }
     %{else}
     # Account-level zone file for all DNS in this sub-account.
     ${templatefile("${path.module}/templates/dns.tmpl.tf", {
@@ -159,7 +174,7 @@ resource "local_file" "section_configs" {
 
     ${templatefile("${path.module}/templates/locals.tmpl.tf", {
       name        = var.name
-      domain      = var.domain
+      domain      = local.domain
       region      = var.region
       environment = var.environment
       org         = var.root_account.name
