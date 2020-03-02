@@ -160,7 +160,7 @@ resource "local_file" "bootstrap" {
 
 // configure each section in the account
 resource "local_file" "section_configs" {
-  for_each             = local.is_root ? {} : var.sections
+  for_each             = var.sections
   filename             = "${local.root_path}/${each.key}/config.tf"
   file_permission      = "0644"
   directory_permission = "0755"
