@@ -1,15 +1,16 @@
 locals {
   config = {
-    name         = "${name}"
+    name          = "${name}"
 %{~ if environment != null}
-    environment  = "${environment}"
+    environment   = "${environment}"
 %{~ endif}
 %{~ if domain != null}
-    domain       = "${domain}"
+    domain        = "${domain}"
 %{~ endif}
-    region       = "${region}"
-    account_id   = data.aws_caller_identity.current.account_id
-    azs          = data.aws_availability_zones.current
+    secret_prefix = "${secret_prefix}"
+    region        = "${region}"
+    account_id    = data.aws_caller_identity.current.account_id
+    azs           = data.aws_availability_zones.current
   }
   globals = yamldecode(file("../../${org}/globals.yml"))
 }

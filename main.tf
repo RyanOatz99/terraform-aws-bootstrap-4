@@ -173,11 +173,12 @@ resource "local_file" "section_configs" {
     })}
 
     ${templatefile("${path.module}/templates/locals.tmpl.tf", {
-      name        = var.name
-      domain      = local.domain
-      region      = var.region
-      environment = var.environment
-      org         = var.root_account.name
+      name          = var.name
+      domain        = local.domain
+      region        = var.region
+      environment   = var.environment
+      secret_prefix = local.is_root ? "/${var.name}" : "/${var.root_account.name}-${var.name}"
+      org           = local.is_root ? var.name : var.root_account.name
     })}
     %{for state in each.value.remote_states}
     ${templatefile("${path.module}/templates/remote-state.tmpl.tf", {
