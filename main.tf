@@ -57,7 +57,7 @@ resource "local_file" "accounts_config" {
 // configure crosslink to hold state for all accounts if this is a root module
 resource "local_file" "crosslink_config" {
   count                = local.is_root ? 1 : 0
-  filename             = "${path.root}/${local.name}/crosslink/config.tf"
+  filename             = "${path.root}/crosslink/config.tf"
   file_permission      = "0644"
   directory_permission = "0755"
   content = <<-EOF
@@ -201,7 +201,7 @@ resource "local_file" "section_configs" {
 // load remote states into crosslink layer for all relevant sections
 resource "local_file" "crosslink_sections" {
   count                = length(local.crosslinked_sections)
-  filename             = "${path.root}/${var.root_account.name}/crosslink/${local.name}.tf"
+  filename             = "${path.root}/crosslink/${local.name}.tf"
   file_permission      = "0644"
   directory_permission = "0755"
   content = <<-EOF
