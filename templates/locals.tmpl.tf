@@ -7,7 +7,6 @@ locals {
 %{~ if domain != null}
     domain        = "${domain}"
 %{~ endif}
-    secret_prefix = "${secret_prefix}"
     region        = "${region}"
     account_id    = data.aws_caller_identity.current.account_id
     azs           = data.aws_availability_zones.current
